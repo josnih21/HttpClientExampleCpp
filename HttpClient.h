@@ -15,7 +15,7 @@ class HttpClient {
     http_client create_client(string url);
 
 public:
-    string get(string url);
+    void get(string url);
 
     void post(string url);
 };

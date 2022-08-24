@@ -1,8 +1,5 @@
-//
-// Created by josnih on 8/23/2022.
-//
-
 #include "HttpClient.h"
+
 using namespace web::http::client;
 using namespace concurrency::streams;
 
@@ -13,30 +10,28 @@ http_client HttpClient::create_client(string url) {
     return client;
 }
 
-string HttpClient::get(string url) {
+void HttpClient::get(string url) {
     http_client client = create_client(url);
     web::http::http_request req(web::http::methods::GET);
-
-    // sync request
-    try {
-        auto resp = client.request(req).get();
-        wcout << resp.status_code() << " : sync request" << endl;
-        stringstreambuf buffer;
-        resp.body().read_to_end(buffer).get();
-        wcout << buffer.collection().c_str() << ": BODY OF THE REQUEST" << endl;
-    } catch(web::http::http_exception const &e){
-        cout << "UNEXPECTED ERROR " << endl;
-    }
+    client.request(req)
+    .then([](const web::http::http_response& response){
+        if(response.status_code() != web::http::status_codes::OK){
+            throw runtime_error("Returned " + to_string(response.status_code()));
+        }
+        cout << response.extract_string().get() << endl;
+    }).wait();
 }
 
 void HttpClient::post(string url) {
     http_client client = create_client(url);
     web::http::http_request req(web::http::methods::POST);
-
-    auto response = client.request(req).get();
-    wcout << "STATUS CODE: " << response.status_code() << endl;
-    stringstreambuf buffer;
-    response.body().read_to_end(buffer).get();
-    wcout << "RESPONSE BODY" <<buffer.collection().c_str() << endl;
+    utf8string requestBody = "'hello': 'world'";
+    req.set_body(requestBody);
+    client.request(req)
+    .then([](const web::http::http_response& response){
+        if(response.status_code() != web::http::status_codes::OK){
+            throw runtime_error("Returned " + to_string(response.status_code()));
+        }
+        cout << response.extract_string().get() << endl;
+    }).wait();
 }
-
