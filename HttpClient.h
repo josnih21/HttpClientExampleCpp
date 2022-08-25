@@ -12,12 +12,12 @@ using namespace web::http::client;
 
 
 class HttpClient {
-    http_client create_client(string url);
+    http_client create_client(const string &url);
 
 public:
-    void get(string url);
+    void get(const string &url);
 
-    void post(string url);
+    void post(const string &url, const utf8string &requestBody);
 };
 
 
