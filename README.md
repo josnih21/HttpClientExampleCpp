@@ -17,3 +17,9 @@ It's a library developed by microsoft to build http servers and http clients, yo
   `make`
 4. **Run the generated executable to test example the code**\
    `./HttpClient_CppRestSDK`
+
+# Sample API Documentation
+
+A sample file could be found in the root directory [here](sample-api-documentation.yaml) you can read this file by exporting it into the official tool for reading Swagger API documentation files [swagger editor](https://editor.swagger.io/)
+
+You can find detailed explanation of how the API documentation works in the file :)
